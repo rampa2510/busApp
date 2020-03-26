@@ -1,13 +1,14 @@
+import {UserDataObj} from '../Types/UtilContext';
 interface State {
   isLoading: boolean;
   message: string | null;
-  token: string | null;
+  token: UserDataObj | null;
 }
 
 type Actions =
-  | {type: 'Login'; token: string | null}
+  | {type: 'Login'; token: UserDataObj | null}
   | {type: 'Log_Out'}
-  | {type: 'Restore_Token'; token: string | null}
+  | {type: 'Restore_Token'; token: UserDataObj | null}
   | {type: 'Loader_On'; message: string}
   | {type: 'Loader_Off'};
 
