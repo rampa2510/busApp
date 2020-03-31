@@ -5,6 +5,10 @@
 //========================================================================================
 import 'react-native-gesture-handler';
 import React, {useReducer, useEffect, useMemo, createContext} from 'react';
+const whyDidYouRender = require('@welldone-software/why-did-you-render');
+whyDidYouRender(React, {
+  trackAllPureComponents: true,
+});
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Alert} from 'react-native';
@@ -29,6 +33,7 @@ import customInterceptor from './Services/interceptor';
 //========================================================================================
 import LoginScreen from './Containers/login.container';
 import SpinnerScreen from './Views/Spinner.view';
+import HomeScreen from './Containers/home.container';
 //########################################################################################
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -107,11 +112,19 @@ const App: React.FC = () => {
         await setData('userData', JSON.stringify(resp[1].data));
         dispatch({type: 'Loader_Off'});
       },
-      signOut: async () => {
-        dispatch({type: 'Loader_On', message: 'Logging out'});
-        await removeData('userData');
-        dispatch({type: 'Log_Out'});
-        dispatch({type: 'Loader_Off'});
+      signOut: () => {
+        Alert.alert('Log out?', 'Are you sure you want to cancel the action?', [
+          {
+            text: 'Log out',
+            onPress: async () => {
+              dispatch({type: 'Loader_On', message: 'Logging out...'});
+              await removeData('userData');
+              dispatch({type: 'Log_Out'});
+              dispatch({type: 'Loader_Off'});
+            },
+          },
+          {text: 'Cancel', style: 'cancel'},
+        ]);
       },
     }),
     [state.token],
@@ -129,7 +142,9 @@ const App: React.FC = () => {
                 message: `${state.message}`,
               }}
             />
-          ) : state.token ? null : (
+          ) : state.token ? (
+            <Stack.Screen name="Home" component={HomeScreen} />
+          ) : (
             <Stack.Screen name="Login" component={LoginScreen} />
           )}
         </Stack.Navigator>
