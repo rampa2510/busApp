@@ -1,20 +1,18 @@
-import React, {memo, useRef} from 'react';
+import React, {memo, useState} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import {RootStackParamList} from '../Types/Stack';
-
 import LoginView from '../Views/login.view';
-import {Picker} from 'react-native';
 
 type LoginScreenProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
 const Login: React.FC = () => {
   const navigation = useNavigation<LoginScreenProp>();
-  const username = useRef<string>('');
-  const password = useRef<string>('');
-  const type = useRef<Picker>(null);
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [userType, setuserType] = useState('user');
   const userOptions = ['driver', 'user', 'admin'];
-  const onSubmit = () => console.log(type, password, username);
+  const onSubmit = () => console.log(userType, password, username);
   const onRegisterClick = () => navigation.navigate('Register');
   return (
     <LoginView
@@ -23,7 +21,10 @@ const Login: React.FC = () => {
       onSubmit={onSubmit}
       onRegisterClick={onRegisterClick}
       userOption={userOptions}
-      userType={type}
+      userType={userType}
+      setuserType={setuserType}
+      setUsername={setUsername}
+      setPassword={setPassword}
     />
   );
 };

@@ -1,4 +1,4 @@
-import React, {memo, MutableRefObject, RefObject} from 'react';
+import React, {memo} from 'react';
 import {Screen, Heading, TextInput, Button, Text, View} from '@shoutem/ui';
 import {
   StyleSheet,
@@ -41,12 +41,15 @@ const styles = StyleSheet.create<Styles>({
   },
 });
 interface Props {
-  username: MutableRefObject<string>;
-  password: MutableRefObject<string>;
-  userType: RefObject<Picker>;
+  username: string;
+  password: string;
+  userType: string;
   onSubmit: () => void;
   onRegisterClick: () => void;
   userOption: string[];
+  setuserType: (newtype: string) => void;
+  setUsername: (username: string) => void;
+  setPassword: (password: string) => void;
 }
 
 const Login: React.FC<Props> = ({
@@ -56,6 +59,9 @@ const Login: React.FC<Props> = ({
   onRegisterClick,
   userOption,
   userType,
+  setuserType,
+  setPassword,
+  setUsername,
 }) => {
   return (
     <Screen>
@@ -67,7 +73,8 @@ const Login: React.FC<Props> = ({
           autoFocus={true}
           enablesReturnKeyAutomatically={true}
           keyboardType="default"
-          ref={username}
+          value={username}
+          onChangeText={setUsername}
           style={styles.textInputStyle}
         />
         <TextInput
@@ -76,14 +83,15 @@ const Login: React.FC<Props> = ({
           enablesReturnKeyAutomatically={true}
           keyboardType={'default'}
           secureTextEntry
-          ref={password}
+          value={password}
+          onChangeText={setPassword}
           style={styles.textInputStyle}
         />
         <View>
           <Picker
-            selectedValue={userOption}
+            selectedValue={userType}
             style={styles.dropDownStyle}
-            ref={userType}>
+            onValueChange={newValue => setuserType(newValue)}>
             {userOption.map(userOpt => (
               <Picker.Item label={userOpt} value={userOpt} />
             ))}
