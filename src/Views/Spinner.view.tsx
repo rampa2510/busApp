@@ -43,7 +43,7 @@ interface Props {
 }
 
 const SpinnerScreen: React.FC<Props> = ({route}) => {
-  console.log(route.params);
+  // console.log(route.params);
   return (
     <View style={styles.container}>
       <Spinner style={{size: 'large'}} />

@@ -1,11 +1,12 @@
 import {getData} from './Storage';
-import {GeneralResponse, ResponseObj} from '../Types/UtilContext';
+import {ResponseObj} from '../Types/UtilContext';
+import {Alert} from 'react-native';
 const customInterceptor = async (
   endpoint: string,
   method = 'GET',
   body = {},
   contentType = 'application/json',
-): Promise<GeneralResponse | null> => {
+): Promise<any[] | [number, ResponseObj] | null> => {
   const token = await getData('token');
   // console.log(endpoint, method, contentType);
   body = contentType === 'application/json' ? JSON.stringify(body) : body;
@@ -18,7 +19,6 @@ const customInterceptor = async (
     },
     body,
   };
-
   // delete user Auth header if userData is not present
   if (!token) {
     delete reqOptions.headers.Authorization;
@@ -33,21 +33,34 @@ const customInterceptor = async (
     // console.log('l');
     delete reqOptions.body;
   }
+  // console.log(reqOptions);
 
   // console.log(key.dev);
+  // console.log(`https://3d073ac7.ngrok.io/${endpoint}`);
   try {
-    const response: GeneralResponse = await fetch(
-      `http://localhost:4000/${endpoint}`,
+    const response: any[] | [number, ResponseObj] = await fetch(
+      `https://6b5cb257.ngrok.io/${endpoint}`,
       reqOptions,
     ).then(async res => {
-      let status: number = res.status;
-      let resp: ResponseObj = await res.json();
+      let status = res.status;
+      let resp = await res.json();
       return [status, resp];
     });
+    if (response[0] === 400) {
+      Alert.alert('Invalid details', response[1].message);
+      return null;
+    }
+    if (!response || response[0] !== 200) {
+      Alert.alert('Error', 'We are experincing issues please try again');
+      return null;
+    }
+
     // console.log(response);
     return response;
   } catch (error) {
     console.log(error);
+    Alert.alert('Error', 'We are experincing issues please try again');
+
     return null;
   }
 };

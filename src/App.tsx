@@ -4,11 +4,11 @@
  *                                                                                      */
 //========================================================================================
 import 'react-native-gesture-handler';
-import React, {useReducer, useEffect, useMemo, createContext} from 'react';
-const whyDidYouRender = require('@welldone-software/why-did-you-render');
-whyDidYouRender(React, {
-  trackAllPureComponents: true,
-});
+import React, {useReducer, useEffect, useMemo, memo} from 'react';
+// const whyDidYouRender = require('@welldone-software/why-did-you-render');
+// whyDidYouRender(React, {
+//   trackAllPureComponents: true,
+// });
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Alert} from 'react-native';
@@ -20,10 +20,11 @@ import {Alert} from 'react-native';
  *                                                                                      */
 //========================================================================================
 import {RootStackParamList} from './Types/Stack';
-import {Utils, UserDataObj, GeneralResponse} from './Types/UtilContext';
+import {Utils, UserDataObj, ResponseObj} from './Types/UtilContext';
 import mainReducer from './Services/userReduces';
 import {getData, setData, removeData} from './Services/Storage';
 import customInterceptor from './Services/interceptor';
+import UtilContext from './Services/UtilContext';
 //########################################################################################
 
 //========================================================================================
@@ -34,6 +35,7 @@ import customInterceptor from './Services/interceptor';
 import LoginScreen from './Containers/login.container';
 import SpinnerScreen from './Views/Spinner.view';
 import HomeScreen from './Containers/home.container';
+import RegistrationScreen from './Containers/Register.container';
 //########################################################################################
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -48,6 +50,8 @@ const App: React.FC = () => {
   useEffect(() => {
     (async () => {
       dispatch({type: 'Loader_On', message: 'Starting app...'});
+      // await removeData('userData');
+
       const userDataString = await getData('userData');
       if (!userDataString) {
         dispatch({type: 'Log_Out'});
@@ -66,39 +70,32 @@ const App: React.FC = () => {
       stopLoader: () => dispatch({type: 'Loader_Off'}),
       signIn: async (username, password, type) => {
         dispatch({type: 'Loader_On', message: 'Logging in..'});
-        const resp: GeneralResponse | null = await customInterceptor(
-          'login',
-          'POST',
-          {
-            username,
-            password,
-            type,
-          },
-        );
+        const resp:
+          | any[]
+          | [number, ResponseObj]
+          | null = await customInterceptor('login', 'POST', {
+          username,
+          password,
+          type,
+        });
         // if no error and request was successfull
-        if (!resp || (resp[0] !== 200 && resp[0] !== 400)) {
-          return Alert.alert(
-            'Error',
-            'We are experincing issues please try again',
-          );
+        if (!resp) {
+          return;
         }
-        if (resp[0] === 400) {
-          return Alert.alert('Invalid details', resp[1].message);
-        }
-        await setData('userData', JSON.stringify(resp[1].data));
+        dispatch({type: 'Login', token: resp[1].data});
         dispatch({type: 'Loader_Off'});
+        await setData('userData', JSON.stringify(resp[1].data));
       },
       signUp: async (username, password, type) => {
         dispatch({type: 'Loader_On', message: 'Signing Up..'});
-        const resp: GeneralResponse | null = await customInterceptor(
-          'register',
-          'POST',
-          {
-            username,
-            password,
-            type,
-          },
-        );
+        const resp:
+          | any[]
+          | [number, ResponseObj]
+          | null = await customInterceptor('register', 'POST', {
+          username,
+          password,
+          type,
+        });
         // if no error and request was successfull
         if (!resp || (resp[0] !== 200 && resp[0] !== 400)) {
           return Alert.alert(
@@ -109,7 +106,15 @@ const App: React.FC = () => {
         if (resp[0] === 400) {
           return Alert.alert('Invalid details', resp[1].message);
         }
-        await setData('userData', JSON.stringify(resp[1].data));
+        if (resp[1].data.type !== 'driver') {
+          await setData('userData', JSON.stringify(resp[1].data));
+          dispatch({type: 'Login', token: resp[1].data});
+        } else {
+          Alert.alert(
+            'Welocme',
+            'Drivers need to be verified before logging in wait for confirmation',
+          );
+        }
         dispatch({type: 'Loader_Off'});
       },
       signOut: () => {
@@ -129,10 +134,10 @@ const App: React.FC = () => {
     }),
     [state.token],
   );
-  const UtilsContext = createContext<Utils>(utils);
+  // console.log(state);
   return (
     <NavigationContainer>
-      <UtilsContext.Provider value={utils}>
+      <UtilContext.Provider value={utils}>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           {state.isLoading ? (
             <Stack.Screen
@@ -145,12 +150,15 @@ const App: React.FC = () => {
           ) : state.token ? (
             <Stack.Screen name="Home" component={HomeScreen} />
           ) : (
-            <Stack.Screen name="Login" component={LoginScreen} />
+            <>
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Register" component={RegistrationScreen} />
+            </>
           )}
         </Stack.Navigator>
-      </UtilsContext.Provider>
+      </UtilContext.Provider>
     </NavigationContainer>
   );
 };
 
-export default App;
+export default memo(App);

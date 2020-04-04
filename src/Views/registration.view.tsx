@@ -44,18 +44,16 @@ interface Props {
   password: string;
   userType: React.ReactText;
   onSubmit: () => void;
-  onRegisterClick: () => void;
   userOption: string[];
   setuserType: (newtype: React.ReactText) => void;
   setUsername: (username: string) => void;
   setPassword: (password: string) => void;
 }
 
-const Login: React.FC<Props> = ({
+const Register: React.FC<Props> = ({
   username,
   password,
   onSubmit,
-  onRegisterClick,
   userOption,
   userType,
   setuserType,
@@ -65,7 +63,7 @@ const Login: React.FC<Props> = ({
   return (
     <Screen>
       <KeyboardAvoidingView style={styles.container}>
-        <Heading styleName="bold">BEST APP</Heading>
+        <Heading styleName="bold">Register</Heading>
         <TextInput
           placeholder="Username"
           autoCompleteType="username"
@@ -100,13 +98,6 @@ const Login: React.FC<Props> = ({
           onPress={onSubmit}
           style={styles.buttonStyle}
           styleName="secondary">
-          <Text>Login</Text>
-        </Button>
-        <Text>OR</Text>
-        <Button
-          onPress={onRegisterClick}
-          style={styles.buttonStyle}
-          styleName="secondary">
           <Text>Register</Text>
         </Button>
       </KeyboardAvoidingView>
@@ -114,4 +105,4 @@ const Login: React.FC<Props> = ({
   );
 };
 
-export default memo(Login);
+export default memo(Register);
