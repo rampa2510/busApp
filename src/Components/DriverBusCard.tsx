@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const BusCard = ({busData, bookBus, number, username}) => {
+const BusCard = ({busData, accept}) => {
   return (
     <View style={styles.containerStyle}>
       <View style={styles.flexLy}>
@@ -69,19 +69,18 @@ const BusCard = ({busData, bookBus, number, username}) => {
         }}>
         <Text>Price : {'\u20B9 ' + busData.price}</Text>
       </View>
-
-      {busData.passengers.includes(username) ? (
+      {/* {busData.passengers.includes(username) ? (
         <View style={{width: '100%', alignItems: 'center'}}>
           <Text>Bus Booked By You</Text>
         </View>
-      ) : (
-        <Button
-          onPress={() => bookBus(number)}
-          style={{width: '80%', marginLeft: '10%'}}
-          styleName="secondary md-gutter-top">
-          <Text>Book Bus</Text>
-        </Button>
-      )}
+      ) : ( */}
+      <Button
+        onPress={() => accept(busData.number, busData)}
+        style={{width: '80%', marginLeft: '10%'}}
+        styleName="secondary md-gutter-top">
+        <Text>Confirm ride</Text>
+      </Button>
+      {/* )} */}
     </View>
   );
 };

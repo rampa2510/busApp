@@ -1,13 +1,19 @@
 import React, {memo} from 'react';
-import {View, Text} from 'react-native';
+import {FlatList} from 'react-native';
+import BusCard from '../Components/DriverBusCard';
 import Header from '../Components/header';
-const Driver = () => {
+const DriverHome = ({allBusData, bookBus}) => {
+  console.log(allBusData);
   return (
-    <View>
-      <Header title="Buses" />
-      <Text>Hello</Text>
-    </View>
+    <>
+      <Header title="Available buses" />
+      <FlatList
+        data={allBusData}
+        renderItem={({item}) => <BusCard busData={item} accept={bookBus} />}
+        keyExtractor={item => item._id}
+      />
+    </>
   );
 };
 
-export default memo(Driver);
+export default memo(DriverHome);
