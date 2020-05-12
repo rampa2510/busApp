@@ -16,12 +16,10 @@ const Header: FC<Props> = ({title}) => {
   return (
     <NavigationBar
       leftComponent={
-        title === 'admin' ? (
           <Button onPress={() => navigation.toggleDrawer()}>
             <Image resizeMode={'contain'} style={{width: 30}} source={List} />
           </Button>
-        ) : null
-      }
+        }
       rightComponent={
         <Button onPress={() => utils?.signOut()}>
           <Image resizeMode={'contain'} style={{width: 30}} source={Logout} />

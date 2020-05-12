@@ -37,15 +37,19 @@ import LoginScreen from './Containers/login.container';
 import SpinnerScreen from './Views/Spinner.view';
 import HomeScreen from './Containers/home.container';
 import RegistrationScreen from './Containers/Register.container';
+import FeedBack from './Views/Feedback.view';
 //########################################################################################
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator<DrawerStackParamList>();
 
-const MainDrawer: React.FC = () => {
+const MainDrawer: React.FC = ({route}) => {
   return (
     <Drawer.Navigator initialRouteName="Home">
       <Drawer.Screen name="Home" component={HomeScreen} />
+      {route.params.userType === 'user' ? (
+        <Drawer.Screen name="Feedback" component={FeedBack} />
+      ) : null}
     </Drawer.Navigator>
   );
 };
@@ -158,7 +162,14 @@ const App: React.FC = () => {
               }}
             />
           ) : state.token ? (
-            <Stack.Screen name="Home" component={MainDrawer} />
+            <Stack.Screen
+              name="Home"
+              initialParams={{
+                userType: state.token.type,
+                username: state.token.username,
+              }}
+              component={MainDrawer}
+            />
           ) : (
             <>
               <Stack.Screen name="Login" component={LoginScreen} />
