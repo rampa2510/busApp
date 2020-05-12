@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const BusCard = ({busData}) => {
+const BusCard = ({busData, bookBus, number, username}) => {
   return (
     <View style={styles.containerStyle}>
       <View style={styles.flexLy}>
@@ -61,11 +61,18 @@ const BusCard = ({busData}) => {
         }}>
         <Text>ETA : {busData.time}</Text>
       </View>
-      <Button
-        style={{width: '80%', marginLeft: '10%'}}
-        styleName="secondary md-gutter-top">
-        <Text>Book Bus Please</Text>
-      </Button>
+      {busData.passengers.includes(username) ? (
+        <View style={{width: '100%', alignItems: 'center'}}>
+          <Text>Bus Booked By You</Text>
+        </View>
+      ) : (
+        <Button
+          onPress={() => bookBus(number)}
+          style={{width: '80%', marginLeft: '10%'}}
+          styleName="secondary md-gutter-top">
+          <Text>Book Bus</Text>
+        </Button>
+      )}
     </View>
   );
 };

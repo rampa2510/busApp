@@ -5,17 +5,39 @@ import {FlatList} from 'react-native';
 import Header from '../Components/header';
 import SpinnerView from './Spinner';
 import BusCard from '../Components/BusCard';
-const UserHome: React.FC = ({allBusData, isLoading, getAllBuses}) => {
+import EmptyScreen from './emptyScreen';
+const UserHome: React.FC = ({
+  allBusData,
+  isLoading,
+  getAllBuses,
+  bookBus,
+  username,
+}) => {
   if (!allBusData) {
     return <SpinnerView message="Loading buses" />;
   }
-  // console.log(allBusData);
+  if (!allBusData.length) {
+    return (
+      <>
+        <Header title="Buses" />
+
+        <EmptyScreen message="No buses to show" />
+      </>
+    );
+  }
   return (
     <Screen>
       <Header title="Buses" />
       <FlatList
         data={allBusData}
-        renderItem={({item}) => <BusCard busData={item} />}
+        renderItem={({item}) => (
+          <BusCard
+            busData={item}
+            bookBus={bookBus}
+            number={item.number}
+            username={username}
+          />
+        )}
         keyExtractor={item => item._id}
         refreshing={isLoading}
         onRefresh={getAllBuses}
