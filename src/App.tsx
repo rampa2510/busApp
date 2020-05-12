@@ -9,6 +9,7 @@ import React, {useReducer, useEffect, useMemo, memo} from 'react';
 // whyDidYouRender(React, {
 //   trackAllPureComponents: true,
 // });
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Alert} from 'react-native';
@@ -19,7 +20,7 @@ import {Alert} from 'react-native';
  *                    Import all types and helper functions                             *
  *                                                                                      */
 //========================================================================================
-import {RootStackParamList} from './Types/Stack';
+import {RootStackParamList, DrawerStackParamList} from './Types/ComponentRoute';
 import {Utils, UserDataObj, ResponseObj} from './Types/UtilContext';
 import mainReducer from './Services/userReduces';
 import {getData, setData, removeData} from './Services/Storage';
@@ -39,6 +40,15 @@ import RegistrationScreen from './Containers/Register.container';
 //########################################################################################
 
 const Stack = createStackNavigator<RootStackParamList>();
+const Drawer = createDrawerNavigator<DrawerStackParamList>();
+
+const MainDrawer: React.FC = () => {
+  return (
+    <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Screen name="Home" component={HomeScreen} />
+    </Drawer.Navigator>
+  );
+};
 
 const App: React.FC = () => {
   const [state, dispatch] = useReducer(mainReducer, {
@@ -148,7 +158,7 @@ const App: React.FC = () => {
               }}
             />
           ) : state.token ? (
-            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Home" component={MainDrawer} />
           ) : (
             <>
               <Stack.Screen name="Login" component={LoginScreen} />

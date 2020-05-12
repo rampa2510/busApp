@@ -1,7 +1,7 @@
 import React, {memo, useState, useContext} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../Types/Stack';
+import {RootStackParamList} from '../Types/ComponentRoute';
 import LoginView from '../Views/login.view';
 import UtilContext from '../Services/UtilContext';
 type LoginScreenProp = StackNavigationProp<RootStackParamList, 'Login'>;

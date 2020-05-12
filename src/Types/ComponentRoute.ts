@@ -4,3 +4,7 @@ export type RootStackParamList = {
   Register: undefined;
   Home: undefined;
 };
+
+export type DrawerStackParamList = {
+  Home: undefined;
+};

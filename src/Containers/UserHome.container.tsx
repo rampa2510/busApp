@@ -1,16 +1,13 @@
-import React, {memo, useRef, useEffect, useState, useCallback} from 'react';
+import React, {memo, useRef, useEffect, useState, useCallback,useContext} from 'react';
 import UserView from '../Views/UserHome.View';
 import {BusDataType} from '../Types/EssentialData';
 import interceptor from '../Services/interceptor';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../Types/Stack';
-type UserHomeScreenProp = StackNavigationProp<RootStackParamList, 'Home'>;
+import Spinner from '../Views/Spinner';
 
 const UserHome: React.FC = () => {
-  const navigation = useNavigation<UserHomeScreenProp>();
   const BusData = useRef<BusDataType[] | null>(null);
   // console.log(BusData);
+
   const [isLoading, setLoading] = useState<boolean>(true);
 
   const getAllBuses = useCallback(async () => {
@@ -29,13 +26,20 @@ const UserHome: React.FC = () => {
     (async () => {
       await getAllBuses();
     })();
-  }, []);
+  }, [getAllBuses]);
 
   if (isLoading) {
-    navigation.navigate('Spinner', {message: 'Loading busses'});
+    return <Spinner message="Loading buses" />;
   }
 
-  return <UserView allBusData={BusData.current} />;
+  return (
+    <UserView
+      allBusData={BusData.current}
+      isLoading={isLoading}
+      getAllBuses={getAllBuses}
+
+    />
+  );
 };
 
 export default memo(UserHome);

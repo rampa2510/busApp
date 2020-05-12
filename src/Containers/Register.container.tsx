@@ -1,7 +1,7 @@
 import React, {memo, useState, useContext} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../Types/Stack';
+import {RootStackParamList} from '../Types/ComponentRoute';
 import RegistrationView from '../Views/registration.view';
 import UtilContext from '../Services/UtilContext';
 type LoginScreenProp = StackNavigationProp<RootStackParamList, 'Register'>;
@@ -13,7 +13,7 @@ const Register: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [userType, setuserType] = useState<React.ReactText>('user');
-  const userOptions = ['driver', 'user', 'admin'];
+  const userOptions = ['driver', 'user'];
   // console.log(userType, username, password);
   const onSubmit = () => utils?.signUp(username, password, userType.toString());
 

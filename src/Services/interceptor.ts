@@ -34,12 +34,12 @@ const customInterceptor = async (
     delete reqOptions.body;
   }
   // console.log(reqOptions);
-
+  console.log(endpoint);
   // console.log(key.dev);
   // console.log(`https://3d073ac7.ngrok.io/${endpoint}`);
   try {
     const response: any[] | [number, ResponseObj] = await fetch(
-      `https://6b5cb257.ngrok.io/${endpoint}`,
+      `https://busback.herokuapp.com/${endpoint}`,
       reqOptions,
     ).then(async res => {
       let status = res.status;

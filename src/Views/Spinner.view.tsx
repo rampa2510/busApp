@@ -3,7 +3,7 @@ import React, {memo} from 'react';
 import {StyleSheet, ViewStyle, TextStyle} from 'react-native';
 import {View, Spinner, Text} from '@shoutem/ui';
 import {RouteProp} from '@react-navigation/native';
-import {RootStackParamList} from '../Types/Stack';
+import {RootStackParamList} from '../Types/ComponentRoute';
 interface Styles {
   container: ViewStyle;
   welcome: TextStyle;
