@@ -39,6 +39,7 @@ import HomeScreen from './Containers/home.container';
 import RegistrationScreen from './Containers/Register.container';
 import FeedBack from './Views/Feedback.view';
 import FeedBackList from './Views/FeedbackList.view';
+import BusDetails from './Views/BusList.view';
 //########################################################################################
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -51,11 +52,18 @@ const MainDrawer: React.FC = ({route}) => {
       {route.params.userType === 'user' ? (
         <Drawer.Screen name="Feedback" component={FeedBack} />
       ) : route.params.userType === 'admin' ? (
-        <Drawer.Screen
-          options={{title: 'Feedback List'}}
-          name="FeedbackList"
-          component={FeedBackList}
-        />
+        <>
+          <Drawer.Screen
+            options={{title: 'Feedback List'}}
+            name="FeedbackList"
+            component={FeedBackList}
+          />
+          <Drawer.Screen
+            options={{title: 'Bus List'}}
+            name="buslist"
+            component={BusDetails}
+          />
+        </>
       ) : null}
     </Drawer.Navigator>
   );
