@@ -38,6 +38,7 @@ import SpinnerScreen from './Views/Spinner.view';
 import HomeScreen from './Containers/home.container';
 import RegistrationScreen from './Containers/Register.container';
 import FeedBack from './Views/Feedback.view';
+import FeedBackList from './Views/FeedbackList.view';
 //########################################################################################
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -49,6 +50,12 @@ const MainDrawer: React.FC = ({route}) => {
       <Drawer.Screen name="Home" component={HomeScreen} />
       {route.params.userType === 'user' ? (
         <Drawer.Screen name="Feedback" component={FeedBack} />
+      ) : route.params.userType === 'admin' ? (
+        <Drawer.Screen
+          options={{title: 'Feedback List'}}
+          name="FeedbackList"
+          component={FeedBackList}
+        />
       ) : null}
     </Drawer.Navigator>
   );
